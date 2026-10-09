@@ -1,47 +1,75 @@
 package com.example.myapplication
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.ui.theme.MyApplicationTheme
-
+const val KEY_TEXT = "KEY_TEXT"
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             MyApplicationTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                Scaffold(modifier = Modifier.fillMaxSize()) {innerPadding ->
+                    FirstScreen(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+class FirstViewModel : ViewModel() {
+    var text by mutableStateOf("")
+    var isError by mutableStateOf(false)
 }
 
-@Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    MyApplicationTheme {
-        Greeting("Android")
+fun FirstScreen(viewModel: FirstViewModel = viewModel(), modifier: Modifier){
+    val context = LocalContext.current
+    Column(modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally) {
+        TextField(
+            value = viewModel.text,
+            onValueChange = { viewModel.text = it },
+            label = { Text("Введите текст") },
+            isError = viewModel.isError,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+        if(viewModel.isError){Text("Введите строку", modifier = Modifier.padding(bottom = 16.dp))}
+        Button(
+            onClick = { if (viewModel.text.isBlank()){
+                    viewModel.isError = true
+                } else{
+                    val intent = Intent(context, SecondActivity::class.java)
+                    intent.putExtra(KEY_TEXT, viewModel.text)
+                    context.startActivity(intent)
+                }
+            }
+        ){
+            Text("Передать строку")
+        }
     }
 }
