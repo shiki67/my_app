@@ -1,7 +1,9 @@
 package com.example.myapplication
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Patterns
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -25,6 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.ui.theme.MyApplicationTheme
+import androidx.core.net.toUri
+
 const val KEY_TEXT = "KEY_TEXT"
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +62,7 @@ fun FirstScreen(viewModel: FirstViewModel = viewModel(), modifier: Modifier){
             isError = viewModel.isError,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-        if(viewModel.isError){Text("Введите строку", modifier = Modifier.padding(bottom = 16.dp))}
+        if(viewModel.isError){Text("Неподходящий формат данных", modifier = Modifier.padding(bottom = 16.dp))}
         Button(
             onClick = { if (viewModel.text.isBlank()){
                     viewModel.isError = true
@@ -67,9 +71,38 @@ fun FirstScreen(viewModel: FirstViewModel = viewModel(), modifier: Modifier){
                     intent.putExtra(KEY_TEXT, viewModel.text)
                     context.startActivity(intent)
                 }
-            }
+            },
+            modifier = Modifier.padding(bottom = 16.dp)
         ){
             Text("Передать строку")
+        }
+        Button(
+            onClick = {
+                if (Patterns.PHONE.matcher(viewModel.text).matches()){
+                    viewModel.isError = false
+                    val intent = Intent(Intent.ACTION_DIAL, "tel:${viewModel.text}".toUri())
+                    context.startActivity(intent)
+                } else{
+                    viewModel.isError = true
+                }
+            },
+            modifier = Modifier.padding(bottom = 16.dp)
+        ){
+            Text("Позвонить другу")
+        }
+        Button(
+            onClick = {if (viewModel.text.isBlank()){
+                viewModel.isError = true
+            } else{
+                val intent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, viewModel.text)
+                }
+                context.startActivity(Intent.createChooser(intent, "Поделиться через…"))
+            } },
+            modifier = Modifier.padding(bottom = 16.dp)
+        ){
+            Text("Поделиться текстом")
         }
     }
 }
