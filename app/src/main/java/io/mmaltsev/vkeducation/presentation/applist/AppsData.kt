@@ -5,6 +5,7 @@ import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Settings
@@ -19,4 +20,5 @@ val hardcodedApps = listOf(
     AppDetails(6, "Покупки", Icons.Filled.ShoppingCart, "Списки покупок и сравнение цен в магазинах", "Шопинг"),
     AppDetails(7, "Умный дом", Icons.Filled.Home, "Управление устройствами в вашем доме", "Образ жизни"),
     AppDetails(8, "Настройки", Icons.Filled.Settings, "Тонкая настройка системы и приложений", "Система"),
+    AppDetails(9, "Здоровье", Icons.Filled.Favorite, "Учёт активности, сна и пульса", "Здоровье"),
 )

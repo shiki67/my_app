@@ -1,6 +1,7 @@
 package io.mmaltsev.vkeducation.presentation.applist
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.mmaltsev.vkeducation.presentation.theme.VkEducationTheme
@@ -26,32 +29,60 @@ import io.mmaltsev.vkeducation.presentation.theme.VkEducationTheme
 internal fun OneApp(
     app: AppDetails,
     modifier: Modifier = Modifier,
+    compact: Boolean = false,
+    onClick: () -> Unit = {},
 ) {
-    Column(modifier = modifier.fillMaxWidth().clip(RoundedCornerShape(32.dp)).background(color = Color(0xFF625b71)).padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally) {
-        Box(modifier = Modifier.padding(32.dp).clip(RoundedCornerShape(32.dp)).background(color = Color(0xAAFFFFFF))){
+    val corner = if (compact) 16.dp else 32.dp
+    val outerPadding = if (compact) 8.dp else 32.dp
+    val iconPadding = if (compact) 4.dp else 32.dp
+    val iconSize = if (compact) 48.dp else 256.dp
+    val nameStyle = if (compact) MaterialTheme.typography.titleSmall else MaterialTheme.typography.titleLarge
+    val descriptionStyle = if (compact) MaterialTheme.typography.bodySmall else MaterialTheme.typography.titleSmall
+    val categoryStyle = if (compact) MaterialTheme.typography.labelSmall else MaterialTheme.typography.titleSmall
+    val textAlign = if (compact) TextAlign.Center else null
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(corner))
+            .background(color = Color(0xFF625b71))
+            .clickable(onClick = onClick)
+            .padding(outerPadding),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Box(
+            modifier = Modifier
+                .padding(iconPadding)
+                .clip(RoundedCornerShape(corner))
+                .background(color = Color(0xAAFFFFFF)),
+        ) {
             Icon(
                 imageVector = app.icon,
-                modifier = Modifier.size(256.dp),
+                modifier = Modifier.size(iconSize),
                 tint = Color(0xFF000000),
                 contentDescription = null,
             )
         }
         Text(
             text = app.name,
-            style = MaterialTheme.typography.titleLarge.copy(
-                fontWeight = FontWeight.Bold,
-            ),
+            style = nameStyle.copy(fontWeight = FontWeight.Bold),
+            textAlign = textAlign,
+            maxLines = if (compact) 1 else Int.MAX_VALUE,
+            overflow = TextOverflow.Ellipsis,
         )
         Text(
             text = app.description,
-            style = MaterialTheme.typography.titleSmall,
+            style = descriptionStyle,
+            textAlign = textAlign,
+            maxLines = if (compact) 2 else Int.MAX_VALUE,
+            overflow = TextOverflow.Ellipsis,
         )
         Text(
             text = app.category,
-            style = MaterialTheme.typography.titleSmall.copy(
-                fontWeight = FontWeight.Bold
-            ),
+            style = categoryStyle.copy(fontWeight = FontWeight.Bold),
+            textAlign = textAlign,
+            maxLines = if (compact) 1 else Int.MAX_VALUE,
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }
@@ -62,6 +93,17 @@ private fun Preview() {
     VkEducationTheme {
         OneApp(
             app = AppDetails(1, "Инструменты", Icons.Filled.Build, "Набор полезных утилит", "Утилиты"),
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 120)
+@Composable
+private fun CompactPreview() {
+    VkEducationTheme {
+        OneApp(
+            app = AppDetails(1, "Инструменты", Icons.Filled.Build, "Набор полезных утилит", "Утилиты"),
+            compact = true,
         )
     }
 }

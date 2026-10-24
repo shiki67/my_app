@@ -11,13 +11,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import io.mmaltsev.vkeducation.presentation.theme.VkEducationTheme
 
 @Composable
-fun AppsScreen() {
+fun AppsScreen(
+    onAppClick: (AppDetails) -> Unit,
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = { Toolbar(icon = Icons.Filled.Build) },
     ) { innerPadding ->
         AppList(
             apps = hardcodedApps,
+            onAppClick = onAppClick,
             modifier = Modifier.padding(innerPadding),
         )
     }
@@ -27,6 +30,6 @@ fun AppsScreen() {
 @Composable
 private fun AppsScreenPreview() {
     VkEducationTheme {
-        AppsScreen()
+        AppsScreen(onAppClick = {})
     }
 }

@@ -13,6 +13,7 @@ import io.mmaltsev.vkeducation.presentation.theme.VkEducationTheme
 @Composable
 internal fun AppList(
     apps: List<AppDetails>,
+    onAppClick: (AppDetails) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -21,7 +22,10 @@ internal fun AppList(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         items(items = apps, key = { it.id }) { app ->
-            OneApp(app = app)
+            OneApp(
+                app = app,
+                onClick = { onAppClick(app) },
+            )
         }
     }
 }
@@ -30,6 +34,6 @@ internal fun AppList(
 @Composable
 private fun AppListPreview() {
     VkEducationTheme {
-        AppList(apps = hardcodedApps)
+        AppList(apps = hardcodedApps, onAppClick = {})
     }
 }
