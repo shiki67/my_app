@@ -1,6 +1,7 @@
 package io.mmaltsev.vkeducation.presentation.applist
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,6 +23,7 @@ import io.mmaltsev.vkeducation.presentation.theme.VkEducationTheme
 @Composable
 internal fun Toolbar(
     icon: ImageVector,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -30,6 +32,7 @@ internal fun Toolbar(
         modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.primary)
+            .clickable(onClick = onClick)
             .statusBarsPadding()
             .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
@@ -46,6 +49,6 @@ internal fun Toolbar(
 @Composable
 private fun ToolbarPreview() {
     VkEducationTheme {
-        Toolbar(icon = Icons.Filled.Build)
+        Toolbar(icon = Icons.Filled.Build, onClick = {})
     }
 }
